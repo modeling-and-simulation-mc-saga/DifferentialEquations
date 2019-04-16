@@ -41,18 +41,19 @@ public class HarmonicOscillatorWithExternalForce extends AbstractOscillator {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
+        //初期値
         double x0 = 0.;
         double v0 = 1.;
         double k = 1.;// k/mに相当
 
         //外力の定義
-        double gamma = Math.sqrt(k)+0.1;
+        double gamma = Math.sqrt(k) + 0.1;
         double beta = 0.;
         double f = .1;
-        DoubleFunction<Double> exForce = (double t) -> {
-            return f * Math.cos(gamma * t + beta);
-        };
-        
+        //外力はラムダ式で定義
+        DoubleFunction<Double> exForce
+                = t -> f * Math.cos(gamma * t + beta);
+
         HarmonicOscillatorWithExternalForce sys
                 = new HarmonicOscillatorWithExternalForce(x0, v0, k, exForce);
         double t = 200.;
