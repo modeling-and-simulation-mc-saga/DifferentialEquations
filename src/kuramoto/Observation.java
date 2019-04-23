@@ -38,7 +38,9 @@ public class Observation {
             double d = 0.;
             for (int i = 0; i < n-1; i++) {
                 for (int j = i+1; j < n; j++) {
-                    d += Math.pow(Math.sin(th[i] - th[j]), 2.);
+                    //ここを記述
+
+
                 }
             }
             plist.add(new Point2D.Double(t, d));
