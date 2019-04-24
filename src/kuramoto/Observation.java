@@ -13,6 +13,30 @@ import myLib.utils.Utils;
  */
 public class Observation {
 
+    private final Kuramoto sys;
+    private final int n;
+
+    public Observation(Kuramoto sys, int n) {
+        this.sys = sys;
+        this.n = n;
+    }
+
+    public List<Point2D.Double> doObserve(int tmax, double h) {
+        List<Point2D.Double> plist = Utils.createList();
+        for (int t = 0; t < tmax; t++) {
+            double th[] = sys.update(h);
+            double d = 0.;
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = i + 1; j < n; j++) {
+                    //ここを記述
+
+                }
+            }
+            plist.add(new Point2D.Double(t, d));
+        }
+        return plist;
+    }
+
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -29,22 +53,10 @@ public class Observation {
             omega[i] = 5. * (0.8 + 0.4 * Math.random());
             theta[i] = 2. * Math.PI * Math.random();
         }
-        Kuramoto sys = new Kuramoto(theta, omega, k);
-        
+        Observation observation = new Observation(
+                new Kuramoto(theta, omega, k), n);
         //実行
-        List<Point2D.Double> plist = Utils.createList();
-        for (int t = 0; t < tmax; t++) {
-            double th[] = sys.update(h);
-            double d = 0.;
-            for (int i = 0; i < n-1; i++) {
-                for (int j = i+1; j < n; j++) {
-                    //ここを記述
-
-
-                }
-            }
-            plist.add(new Point2D.Double(t, d));
-        }
+        List<Point2D.Double> plist = observation.doObserve(tmax, h);
         //ファイへ出力
         String filename = Observation.class.getSimpleName()
                 + "-" + String.valueOf(k) + "-output.txt";
