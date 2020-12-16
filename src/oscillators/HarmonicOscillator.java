@@ -1,8 +1,11 @@
 package oscillators;
 
 import java.awt.geom.Point2D;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import myLib.utils.FileIO;
 
 /**
  * 調和振動子
@@ -42,6 +45,10 @@ public class HarmonicOscillator extends AbstractOscillator {
         double x0 = 0.;
         double v0 = 1.;
         double k = 1.;// k/mに相当
+        List<String> headers = new ArrayList<>();
+        headers.add("harmonic");
+        headers.add("omega = "+String.valueOf(Math.sqrt(k)));
+        
         HarmonicOscillator sys = new HarmonicOscillator(x0, v0, k);
         double t = 50.;
         int nstep = 10000;
@@ -51,7 +58,10 @@ public class HarmonicOscillator extends AbstractOscillator {
         // 結果をファイルへ出力
         String filename = HarmonicOscillator.class.getSimpleName()
                 + "-output.txt";
-        AbstractOscillator.printData(points, filename);
+        try ( BufferedWriter out = FileIO.openWriter(filename)) {
+            AbstractOscillator.printHeader(headers, out);
+            AbstractOscillator.printData(points, out);
+        }
     }
 }
 

@@ -1,9 +1,12 @@
 package oscillators;
 
 import java.awt.geom.Point2D;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleFunction;
+import myLib.utils.FileIO;
 
 /**
  * 調和振動子＋強制振動
@@ -47,9 +50,15 @@ public class HarmonicOscillatorWithExternalForce extends AbstractOscillator {
         double k = 1.;// k/mに相当
 
         //外力の定義
+//        double gamma = Math.sqrt(k) + 0.1;
         double gamma = Math.sqrt(k) + 0.1;
         double beta = 0.;
         double f = .1;
+        List<String> headers = new ArrayList<>();
+        headers.add("external force");
+        headers.add("omega = " + String.valueOf(Math.sqrt(k)));
+        headers.add("gamma = " + String.valueOf(gamma));
+
         //外力はラムダ式で定義
         DoubleFunction<Double> exForce
                 = t -> f * Math.cos(gamma * t + beta);
@@ -65,6 +74,9 @@ public class HarmonicOscillatorWithExternalForce extends AbstractOscillator {
         String filename
                 = HarmonicOscillatorWithExternalForce.class.getSimpleName()
                 + "-output.txt";
-        AbstractOscillator.printData(points, filename);
+        try ( BufferedWriter out = FileIO.openWriter(filename)) {
+            AbstractOscillator.printHeader(headers, out);
+            AbstractOscillator.printData(points, out);
+        }
     }
 }

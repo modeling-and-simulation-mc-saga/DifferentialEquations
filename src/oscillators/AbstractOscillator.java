@@ -10,6 +10,7 @@ import myLib.utils.Utils;
 
 /**
  * 振動子の抽象クラス
+ *
  * @author tadaki
  */
 public class AbstractOscillator {
@@ -20,8 +21,9 @@ public class AbstractOscillator {
 
     /**
      * 初期値を用いて初期化
+     *
      * @param x
-     * @param v 
+     * @param v
      */
     public AbstractOscillator(double x, double v) {
         this.x = x;
@@ -30,9 +32,10 @@ public class AbstractOscillator {
 
     /**
      * 時間発展：t/nstepを時間幅として4次のRKを実行
-     * @param t 
-     * @param nstep 
-     * @return 
+     *
+     * @param t
+     * @param nstep
+     * @return
      */
     public List<Point2D.Double> evolution(double t, int nstep) {
         double[] y = new double[2];
@@ -50,18 +53,46 @@ public class AbstractOscillator {
 
     /**
      * 結果のリストをファイルへ書きだす
+     *
      * @param points
      * @param filename
+     * @throws IOException
+     */
+    static public void printData(List<Point2D.Double> points, String filename)
+            throws IOException {
+        try ( BufferedWriter out = FileIO.openWriter(filename)) {
+            printData(points, out);
+        }
+    }
+    /**
+     * 結果のリストをファイルへ書きだす
+     *
+     * @param points
+     * @param out
+     * @throws IOException
+     */
+    static public void printData(List<Point2D.Double> points, BufferedWriter out)
+            throws IOException {
+        for (Point2D.Double p : points) {
+            String s = p.x + " " + p.y;
+            out.write(s);
+            out.newLine();
+        }
+    }
+
+    /**
+     * ヘッダ文字列を出力する
+     * 
+     * @param headers
+     * @param out
      * @throws IOException 
      */
-    static public void printData(List<Point2D.Double> points,String filename) 
-            throws IOException{
-        try (BufferedWriter out = FileIO.openWriter(filename)) {
-            for(Point2D.Double p:points){
-                String s = p.x+" "+p.y;
-                out.write(s);
-                out.newLine();
-            }
+    static public void printHeader(List<String> headers, BufferedWriter out)
+            throws IOException {
+        for (String s : headers) {
+            String h = "#" + s;
+            out.write(h);
+            out.newLine();
         }
     }
 }
