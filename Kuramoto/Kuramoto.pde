@@ -1,17 +1,17 @@
 kuramoto.Kuramoto sys;
-final int L = 1000;
+final int L = 1300;
 final int n = 8;
 final float len = 100.;
 final double k=2.;
 final float r = L/n;
-double h = 0.001;
+double h = 0.01;
 boolean stop=false;
 int t=0;
 
 void setup(){
-  size(1000,1000);
+  size(1300,1300);
   smooth();
-  frameRate(1000);
+  frameRate(100000);
   double theta[]=new double[n*n];
   double omega[]=new double[n*n];
   for(int i=0;i<n*n;i++){
