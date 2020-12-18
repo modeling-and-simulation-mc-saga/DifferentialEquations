@@ -28,12 +28,12 @@ public class Kuramoto {
         n = theta.length;
         this.theta = new double[theta.length];
         System.arraycopy(theta, 0, this.theta, 0, theta.length);
-        equation = (double t, double y[]) -> {
+        equation = (double tt, double yy[]) -> {
             double dy[] = new double[n];
             for (int i = 0; i < n; i++) {
                 dy[i] = omega[i];
                 for (int j = 0; j < n; j++) {
-                    dy[i] += (k / n) * Math.sin(y[j] - y[i]);
+                    dy[i] += (k / n) * Math.sin(yy[j] - yy[i]);
                 }
             }
             return dy;
@@ -60,7 +60,8 @@ public class Kuramoto {
         double theta[] = new double[n];
         double omega[] = new double[n];
         for (int i = 0; i < n; i++) {
-            omega[i] = 5. + 2 * i;
+//            omega[i] = 5. + 2 * i;
+            omega[i]=5.*(0.8+0.4*Math.random());
             theta[i] = 2. * Math.PI * Math.random();
         }
         double kArray[] = {0., 5.};
