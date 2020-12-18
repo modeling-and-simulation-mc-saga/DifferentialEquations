@@ -33,6 +33,7 @@ public class CoupledOscillators2 {
             y[2 * i] = os[i].y;
             y[2 * i + 1] = os[i].v;
         }
+        //微分方程式の定義
         equation = (double tt, double yy[]) -> {
             double dy[] = new double[2 * numOscillators];
             for (int i = 0; i < numOscillators; i++) {
@@ -133,6 +134,10 @@ public class CoupledOscillators2 {
         int lastSpace = sb.lastIndexOf(" ");
         sb.deleteCharAt(lastSpace);
         return sb.toString();
+    }
+
+    public int getNumOscillators() {
+        return numOscillators;
     }
 
     /**
