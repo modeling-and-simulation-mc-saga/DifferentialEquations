@@ -14,6 +14,7 @@ import myLib.utils.FileIO;
 public class Kuramoto {
 
     private final double theta[];
+    private final double omega[];
     private final int n;
     private double t = 0.;
     protected DifferentialEquation equation;
@@ -27,7 +28,13 @@ public class Kuramoto {
     public Kuramoto(double[] theta, double[] omega, double k) {
         n = theta.length;
         this.theta = new double[theta.length];
+        this.omega = new double[omega.length];
         System.arraycopy(theta, 0, this.theta, 0, theta.length);
+        System.arraycopy(omega, 0, this.omega, 0, omega.length);
+        setK(k);
+    }
+
+    public void setK(double k){
         equation = (double tt, double yy[]) -> {
             double dy[] = new double[n];
             for (int i = 0; i < n; i++) {
@@ -38,8 +45,8 @@ public class Kuramoto {
             }
             return dy;
         };
+        
     }
-
     public double[] update(double h) {
         double[] th2 = RungeKutta.rk4(t, theta, h, equation);
         for (int i = 0; i < n; i++) {
