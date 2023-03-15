@@ -20,10 +20,10 @@ public class FreeFall {
     public FreeFall(double yInit, double vInit) {
         this.yInit = yInit;
         this.vInit = vInit;
-        equation = (double t, double y[]) -> {
+        equation = (double t, double y[]) -> {//Define equations
             double dy[] = new double[2];
-            dy[0] = y[1];
-            dy[1] = -g;
+
+
             return dy;
         };
     }
