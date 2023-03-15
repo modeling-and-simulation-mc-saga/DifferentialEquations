@@ -1,26 +1,23 @@
 package oscillators;
 
-import java.awt.geom.Point2D;
-import java.io.BufferedWriter;
+import rungeKutta.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
-import myLib.rungeKutta.*;
-import myLib.utils.FileIO;
-import myLib.utils.Utils;
 
 /**
- * 振動子の抽象クラス
+ * Abstract class of oscillators
  *
  * @author tadaki
  */
 public class AbstractOscillator {
 
-    protected final double x;//変位
-    protected final double v;//速度
-    protected DifferentialEquation equation;//微分方程式
+    protected final double x;//deviation
+    protected final double v;//velocity
+    protected DifferentialEquation equation;//diffential equation
 
     /**
-     * 初期値を用いて初期化
+     * Initializing with initial values
      *
      * @param x
      * @param v
@@ -31,68 +28,29 @@ public class AbstractOscillator {
     }
 
     /**
-     * 時間発展：t/nstepを時間幅として4次のRKを実行
+     * Time evolution: the time step is t/nsteps
      *
-     * @param t
-     * @param nstep
+     * @param t duration
+     * @param nstep the number of steps
      * @return
      */
-    public List<Point2D.Double> evolution(double t, int nstep) {
+    public List<State> evolution(double t, int nstep) {
         double[] y = new double[2];
         y[0] = x;
         y[1] = v;
-        double[][] yy = RungeKutta.rkdumb(y, 0., t, nstep, equation);
-        List<Point2D.Double> points = Utils.createList();
-        double dt = t / nstep;
-        for (int i = 0; i < nstep; i++) {
-            double tt = i * dt;
-            points.add(new Point2D.Double(tt, yy[0][i]));
-        }
-        return points;
+        List<State> yy = RungeKutta.rkdumb(new State(0,y), t, nstep, equation);
+        return yy;
     }
 
     /**
-     * 結果のリストをファイルへ書きだす
+     * output head strings
      *
-     * @param points
-     * @param filename
-     * @throws IOException
-     */
-    static public void printData(List<Point2D.Double> points, String filename)
-            throws IOException {
-        try ( BufferedWriter out = FileIO.openWriter(filename)) {
-            printData(points, out);
-        }
-    }
-    /**
-     * 結果のリストをファイルへ書きだす
-     *
-     * @param points
-     * @param out
-     * @throws IOException
-     */
-    static public void printData(List<Point2D.Double> points, BufferedWriter out)
-            throws IOException {
-        for (Point2D.Double p : points) {
-            String s = p.x + " " + p.y;
-            out.write(s);
-            out.newLine();
-        }
-    }
-
-    /**
-     * ヘッダ文字列を出力する
-     * 
      * @param headers
      * @param out
-     * @throws IOException 
+     * @throws IOException
      */
-    static public void printHeader(List<String> headers, BufferedWriter out)
+    static public void printHeader(List<String> headers, PrintStream out)
             throws IOException {
-        for (String s : headers) {
-            String h = "#" + s;
-            out.write(h);
-            out.newLine();
-        }
+        headers.forEach(s -> out.println("#" + s));
     }
 }
