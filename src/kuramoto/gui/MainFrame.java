@@ -1,8 +1,6 @@
 package kuramoto.gui;
 
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -16,6 +14,7 @@ public class MainFrame extends javax.swing.JFrame {
     private final Simulation sys;
     private final ButtonGroup kGroup;
     private final Font font;
+
     /**
      * Creates new form NewMain
      */
@@ -23,17 +22,20 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         sys = new Simulation(drawPanel.getPreferredSize().width,
                 new Random(39874L));
-                font = new Font("Yu Gothic UI", 0, 24);
+        font = new Font("Yu Gothic UI", 0, 24);
         kGroup = new ButtonGroup();
-        List<Double> kList=new ArrayList<>();
-        for(int i=0;i<10;i++){
-            double d = i+1.;
+        for (int i = 0; i < 10; i++) {
+            double d = i + 1.;
             JCheckBoxMenuItem item = new JCheckBoxMenuItem(String.valueOf(d));
-            item.addActionListener(evt->sys.setK(d));
+            item.addActionListener(evt -> sys.setK(d));
             item.setFont(font);
             setKMenu.add(item);
+            if (i == 2) {
+                item.setSelected(true);
+            }
             kGroup.add(item);
         }
+
     }
 
     /**
@@ -45,7 +47,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        drawPanel = new coupledOscillators2.gui.DrawPanel();
+        drawPanel = new kuramoto.gui.DrawPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         quit = new javax.swing.JMenuItem();
@@ -57,7 +59,6 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         drawPanel.setBackground(new java.awt.Color(204, 255, 204));
-        drawPanel.setPreferredSize(new java.awt.Dimension(600, 600));
 
         javax.swing.GroupLayout drawPanelLayout = new javax.swing.GroupLayout(drawPanel);
         drawPanel.setLayout(drawPanelLayout);
@@ -67,7 +68,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 262, Short.MAX_VALUE)
+            .addGap(0, 263, Short.MAX_VALUE)
         );
 
         getContentPane().add(drawPanel, java.awt.BorderLayout.CENTER);
@@ -144,7 +145,7 @@ public class MainFrame extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Metal".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -171,7 +172,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu actionMenu;
-    private coupledOscillators2.gui.DrawPanel drawPanel;
+    private kuramoto.gui.DrawPanel drawPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem quit;

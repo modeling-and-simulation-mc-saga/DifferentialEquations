@@ -1,11 +1,11 @@
 package kuramoto;
 
 import java.awt.geom.Point2D;
-import java.io.BufferedWriter;
+import java.io.PrintStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import myLib.utils.FileIO;
-import myLib.utils.Utils;
 
 /**
  *
@@ -22,16 +22,17 @@ public class Observation {
     }
 
     public List<Point2D.Double> doObserve(int tmax, double h) {
-        List<Point2D.Double> plist = Utils.createList();
+        List<Point2D.Double> plist = 
+                Collections.synchronizedList(new ArrayList<>());
         for (int t = 0; t < tmax; t++) {
             double th[] = sys.update(h);
-            double d = 0.;
-            for (int i = 0; i < n - 1; i++) {
-                for (int j = i + 1; j < n; j++) {
-                    //ここを記述
-
-                }
+            double rPart = 0.;
+            double iPart = 0.;
+            for (int i = 0; i < n ; i++) {
+                rPart += Math.cos(th[i]) / n;
+                iPart += Math.sin(th[i]) / n;
             }
+            double d = Math.sqrt(rPart * rPart + iPart * iPart);
             plist.add(new Point2D.Double(t, d));
         }
         return plist;
@@ -42,7 +43,6 @@ public class Observation {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        //振動子系の定義
         int n = 32;
         int tmax = 10000;
         double h = 0.001;
@@ -55,15 +55,13 @@ public class Observation {
         }
         Observation observation = new Observation(
                 new Kuramoto(theta, omega, k), n);
-        //実行
+
         List<Point2D.Double> plist = observation.doObserve(tmax, h);
-        //ファイへ出力
-        String filename = Observation.class.getSimpleName()
+
+        String filename = "Kuramoto"+Observation.class.getSimpleName()
                 + "-" + String.valueOf(k) + "-output.txt";
-        try (BufferedWriter out = FileIO.openWriter(filename)) {
-            for (Point2D.Double p : plist) {
-                FileIO.writeSSV(out, p.x, p.y);
-            }
+        try ( PrintStream out = new PrintStream(filename)) {
+            plist.forEach(p -> out.println(p.x+" "+p.y));
         }
     }
 

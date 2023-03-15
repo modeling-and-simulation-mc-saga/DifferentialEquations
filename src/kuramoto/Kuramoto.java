@@ -1,13 +1,11 @@
 package kuramoto;
 
-import java.io.BufferedWriter;
+import java.io.PrintStream;
 import java.io.IOException;
-import myLib.rungeKutta.DifferentialEquation;
-import myLib.rungeKutta.RungeKutta;
-import myLib.utils.FileIO;
+import rungeKutta.*;
 
 /**
- * 引き込み現象の蔵本モデル
+ * Kuramoto model
  * 
  * @author tadaki
  */
@@ -20,10 +18,9 @@ public class Kuramoto {
     protected DifferentialEquation equation;
 
     /**
-     * コンストラクタ
-     * @param theta 位相の初期値
-     * @param omega 振動子の固有振動数
-     * @param k 結合の強さ
+     * @param theta initial values of phases
+     * @param omega proper frequencies of oscillators
+     * @param k interaction
      */
     public Kuramoto(double[] theta, double[] omega, double k) {
         n = theta.length;
@@ -34,7 +31,7 @@ public class Kuramoto {
         setK(k);
     }
 
-    public void setK(double k){
+    public final void setK(double k){
         equation = (double tt, double yy[]) -> {
             double dy[] = new double[n];
             for (int i = 0; i < n; i++) {
@@ -44,13 +41,13 @@ public class Kuramoto {
                 }
             }
             return dy;
-        };
-        
+        };        
     }
+    
     public double[] update(double h) {
-        double[] th2 = RungeKutta.rk4(t, theta, h, equation);
+        State s = RungeKutta.rk4(new State(t, theta), h, equation);
         for (int i = 0; i < n; i++) {
-            theta[i] = th2[i];
+            theta[i] = s.y()[i];
         }
         t += h;
         return theta;
@@ -76,7 +73,7 @@ public class Kuramoto {
             Kuramoto sys = new Kuramoto(theta, omega, k);
             String filename = Kuramoto.class.getSimpleName()
                     + "-" + String.valueOf(k) + "-output.txt";
-            try (BufferedWriter out = FileIO.openWriter(filename)) {
+            try (PrintStream out = new PrintStream(filename)) {
                 for (int t = 0; t < tmax; t++) {
                     double th[] = sys.update(h);
                     StringBuilder sb = new StringBuilder();
@@ -84,8 +81,7 @@ public class Kuramoto {
                     for (int i = 0; i < n; i++) {
                         sb.append(Math.sin(th[i])).append(" ");
                     }
-                    out.write(sb.toString());
-                    out.newLine();
+                    out.println(sb.toString());
                 }
             }
         }

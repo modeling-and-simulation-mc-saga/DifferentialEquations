@@ -1,6 +1,5 @@
 package kuramoto.gui;
 
-import coupledOscillators2.gui.DrawPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -104,6 +103,10 @@ public class Simulation implements Runnable {
         running = false;
         this.k = k;
         sys.setK(k);
+    }
+    
+    public double getK(){
+        return k;
     }
 
 }
